@@ -1,0 +1,782 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#06081f">
+  <meta name="description" content="¡Super Qubit!: una aventura 2D para aprender computación cuántica construyendo circuitos reales con Qiskit.">
+  <title>¡Super Qubit! · La Academia de los Qubits</title>
+  <link rel="icon" type="image/svg+xml" href="/static/favicon.svg">
+  <link rel="preload" href="/static/assets/baloo2.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/static/assets/nunito.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/static/css/styles.css">
+</head>
+<body>
+  <svg class="svg-defs" aria-hidden="true" focusable="false">
+    <defs>
+      <radialGradient id="qubiBody" cx="34%" cy="22%" r="82%">
+        <stop offset="0%" stop-color="#F0E9FF"/>
+        <stop offset="38%" stop-color="#B79BFF"/>
+        <stop offset="72%" stop-color="#7C5CFF"/>
+        <stop offset="100%" stop-color="#4A2AB8"/>
+      </radialGradient>
+      <radialGradient id="qubiBelly" cx="50%" cy="45%" r="70%">
+        <stop offset="0%" stop-color="#BFF8FF" stop-opacity=".9"/>
+        <stop offset="60%" stop-color="#7DF3FF" stop-opacity=".28"/>
+        <stop offset="100%" stop-color="#43E7FF" stop-opacity="0"/>
+      </radialGradient>
+      <radialGradient id="portalCore" cx="50%" cy="48%" r="58%">
+        <stop offset="0%" stop-color="#FFFFFF"/>
+        <stop offset="18%" stop-color="#DFFBFF"/>
+        <stop offset="45%" stop-color="#43E7FF"/>
+        <stop offset="72%" stop-color="#7C5CFF"/>
+        <stop offset="100%" stop-color="#2A1660" stop-opacity="0"/>
+      </radialGradient>
+      <radialGradient id="portalHalo" cx="50%" cy="50%" r="50%">
+        <stop offset="0%" stop-color="#43E7FF" stop-opacity=".5"/>
+        <stop offset="55%" stop-color="#7C5CFF" stop-opacity=".18"/>
+        <stop offset="100%" stop-color="#7C5CFF" stop-opacity="0"/>
+      </radialGradient>
+      <linearGradient id="violetCyan" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#43E7FF"/>
+        <stop offset="55%" stop-color="#9B7BFF"/>
+        <stop offset="100%" stop-color="#FF6BD6"/>
+      </linearGradient>
+      <linearGradient id="goldGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#FFF3C4"/>
+        <stop offset="100%" stop-color="#FFB84D"/>
+      </linearGradient>
+      <filter id="softGlow" x="-60%" y="-60%" width="220%" height="220%">
+        <feGaussianBlur stdDeviation="4" result="blur"/>
+        <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+      </filter>
+      <filter id="bigGlow" x="-80%" y="-80%" width="260%" height="260%">
+        <feGaussianBlur stdDeviation="12" result="blur"/>
+        <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+      </filter>
+      <filter id="pixelGlow" x="-50%" y="-50%" width="200%" height="200%">
+        <feGaussianBlur stdDeviation="2.2" result="blur"/>
+        <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+      </filter>
+    </defs>
+
+    <symbol id="i-star" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2.4l2.9 6 6.6.9-4.8 4.6 1.2 6.6L12 17.4l-5.9 3.1 1.2-6.6-4.8-4.6 6.6-.9 2.9-6z"/></symbol>
+    <symbol id="i-spark" viewBox="0 0 24 24"><path fill="currentColor" d="M12 1.8l1.9 6.9 6.9 1.9-6.9 1.9L12 19.4l-1.9-6.9-6.9-1.9 6.9-1.9L12 1.8z"/><path fill="currentColor" d="M19 15.6l.9 3.1 3.1.9-3.1.9-.9 3.1-.9-3.1-3.1-.9 3.1-.9.9-3.1z" opacity=".7"/></symbol>
+    <symbol id="i-bolt" viewBox="0 0 24 24"><path fill="currentColor" d="M13.3 2 4.5 14h6l-1.1 8 9.1-12.4h-6.1L13.3 2z"/></symbol>
+    <symbol id="i-lock" viewBox="0 0 24 24"><path fill="currentColor" d="M7.2 10V7.4a4.8 4.8 0 0 1 9.6 0V10H18a2 2 0 0 1 2 2v7.6a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V12a2 2 0 0 1 2-2h1.2zm2.2 0h5.2V7.4a2.6 2.6 0 0 0-5.2 0V10z"/></symbol>
+    <symbol id="i-arrow-right" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" d="M4.5 12h14.2M12.8 6l6.2 6-6.2 6"/></symbol>
+    <symbol id="i-arrow-left" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" d="M19.5 12H5.3M11.2 6l-6.2 6 6.2 6"/></symbol>
+    <symbol id="i-close" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" d="M6 6l12 12M18 6L6 18"/></symbol>
+    <symbol id="i-sound" viewBox="0 0 24 24"><path fill="currentColor" d="M4 9.2h3.4L12.5 5v14l-5.1-4.2H4z"/><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M16 8.5a5 5 0 0 1 0 7M18.7 6a8.7 8.7 0 0 1 0 12"/></symbol>
+    <symbol id="i-mute" viewBox="0 0 24 24"><path fill="currentColor" d="M4 9.2h3.4L12.5 5v14l-5.1-4.2H4z"/><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M16 9.5l5 5M21 9.5l-5 5"/></symbol>
+    <symbol id="i-medal" viewBox="0 0 24 24"><circle cx="12" cy="8.4" r="5.6" fill="none" stroke="currentColor" stroke-width="1.9"/><path fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" d="M8.4 13.4L6.7 22l5.3-3 5.3 3-1.7-8.6"/><circle cx="12" cy="8.4" r="2" fill="currentColor"/></symbol>
+    <symbol id="i-help" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9.2" fill="none" stroke="currentColor" stroke-width="1.9"/><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M9.4 9a2.7 2.7 0 1 1 4 2.4c-.9.6-1.4 1-1.4 2.1"/><circle cx="12" cy="17" r="1.25" fill="currentColor"/></symbol>
+    <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9.2" fill="none" stroke="currentColor" stroke-width="1.9"/><path fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" d="M12 10.8V17"/><circle cx="12" cy="7.6" r="1.2" fill="currentColor"/></symbol>
+    <symbol id="i-refresh" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M20 11.5A8 8 0 1 0 18.4 17M20 4.8v6.4h-6.4"/></symbol>
+    <symbol id="i-trash" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" d="M4 7h16M9.5 7V4.5h5V7M6.5 7l.8 13h9.4l.8-13M10 11v5.5M14 11v5.5"/></symbol>
+    <symbol id="i-undo" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M8.5 8H4V3.5M4.4 8.2a8 8 0 1 1-1.1 6.3"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.5l4.7 4.7L20 5.8"/></symbol>
+    <symbol id="i-play" viewBox="0 0 24 24"><path fill="currentColor" d="M8 4.8l11 7.2-11 7.2z"/></symbol>
+    <symbol id="i-map" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" d="M9 4.3 3.5 6.5v13.2L9 17.5l6 2.2 5.5-2.2V4.3L15 6.5 9 4.3zM9 4.3v13.2M15 6.5v13.2"/></symbol>
+    <symbol id="i-target" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.7" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="12" r="4.5" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="12" r="1.6" fill="currentColor"/></symbol>
+    <symbol id="i-code" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M8.4 7.2 3.6 12l4.8 4.8M15.6 7.2 20.4 12l-4.8 4.8"/></symbol>
+    <symbol id="i-atom" viewBox="0 0 24 24"><circle cx="12" cy="12" r="2.2" fill="currentColor"/><ellipse cx="12" cy="12" rx="9.2" ry="3.8" fill="none" stroke="currentColor" stroke-width="1.6" transform="rotate(30 12 12)"/><ellipse cx="12" cy="12" rx="9.2" ry="3.8" fill="none" stroke="currentColor" stroke-width="1.6" transform="rotate(90 12 12)"/><ellipse cx="12" cy="12" rx="9.2" ry="3.8" fill="none" stroke="currentColor" stroke-width="1.6" transform="rotate(150 12 12)"/></symbol>
+    <symbol id="i-compass" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.8"/><path fill="currentColor" d="M15.9 8.1l-2.1 5.7-5.7 2.1 2.1-5.7 5.7-2.1z"/><circle cx="12" cy="12" r="1.1" fill="#080a20"/></symbol>
+    <symbol id="i-infinity" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" d="M18.6 6.7c-2.5 0-4.3 2.1-6.6 5.3-2.3 3.2-4.1 5.3-6.6 5.3a5.3 5.3 0 0 1 0-10.6c2.5 0 4.3 2.1 6.6 5.3 2.3 3.2 4.1 5.3 6.6 5.3a5.3 5.3 0 0 0 0-10.6z"/></symbol>
+    <symbol id="i-spiral" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" d="M12 21a9 9 0 1 0-9-9 7.2 7.2 0 0 0 14.4 0A5.4 5.4 0 0 0 6.6 12a3.6 3.6 0 0 0 7.2 0A1.8 1.8 0 0 0 12 10.2"/></symbol>
+    <symbol id="i-linked" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" d="M10.2 13.8a4.2 4.2 0 0 0 6 0l2.7-2.7a4.24 4.24 0 0 0-6-6l-1.6 1.6M13.8 10.2a4.2 4.2 0 0 0-6 0l-2.7 2.7a4.24 4.24 0 0 0 6 6l1.6-1.6"/></symbol>
+    <symbol id="i-network" viewBox="0 0 24 24"><circle cx="12" cy="5" r="2.4" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="5" cy="18" r="2.4" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="19" cy="18" r="2.4" fill="none" stroke="currentColor" stroke-width="1.8"/><path fill="none" stroke="currentColor" stroke-width="1.8" d="M12 7.4v3.7M10.4 12.7 6.6 16M13.6 12.7l3.8 3.3"/><circle cx="12" cy="12.4" r="1.3" fill="currentColor"/></symbol>
+    <symbol id="i-chip" viewBox="0 0 24 24"><rect x="6.2" y="6.2" width="11.6" height="11.6" rx="2.4" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="12" r="2.6" fill="none" stroke="currentColor" stroke-width="1.6"/><path fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" d="M9 3v3.2M15 3v3.2M9 17.8V21M15 17.8V21M3 9h3.2M3 15h3.2M17.8 9H21M17.8 15H21"/></symbol>
+    <symbol id="i-trophy" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M8 4h8v5.4a4 4 0 0 1-8 0V4zM8 6H4.5v1.6A3.4 3.4 0 0 0 8 11M16 6h3.5v1.6A3.4 3.4 0 0 1 16 11M12 13.4V18M8.5 21h7M9.5 18h5"/></symbol>
+    <symbol id="i-flask" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M9 3h6M10 3v6.2L4.7 18a2.2 2.2 0 0 0 1.9 3.3h10.8a2.2 2.2 0 0 0 1.9-3.3L14 9.2V3M6.6 15.2h10.8"/><circle cx="10.2" cy="17.5" r="1.1" fill="currentColor"/><circle cx="13.6" cy="18.2" r=".8" fill="currentColor"/></symbol>
+    <symbol id="i-certificate" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" d="M4 4h16v11H4zM7 8h6M7 11h4M8.5 15v5l3.5-2 3.5 2v-5"/></symbol>
+  </svg>
+
+  <div class="cosmos" aria-hidden="true">
+    <canvas id="starfield"></canvas>
+    <div class="cosmos-nebula nebula-a"></div>
+    <div class="cosmos-nebula nebula-b"></div>
+    <div class="cosmos-vignette"></div>
+  </div>
+  <canvas id="confetti" aria-hidden="true"></canvas>
+
+  <div id="toast-root" class="toast-root" aria-live="polite" aria-atomic="true"></div>
+  <div id="modal-root"></div>
+
+  <div class="app-shell">
+    <section class="screen screen-intro" id="screen-intro">
+      <header class="intro-top">
+        <div class="brand-lockup small">
+          <span class="brand-mark"><svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="17" fill="none" stroke="url(#violetCyan)" stroke-width="1.6"/><ellipse cx="20" cy="20" rx="16" ry="6" fill="none" stroke="#43E7FF" stroke-width="1.4" opacity=".7" transform="rotate(-24 20 20)"/><circle cx="20" cy="20" r="4.3" fill="url(#goldGradient)"/><circle cx="32.6" cy="12.8" r="2.3" fill="#FF6BD6"/></svg></span>
+          <span><strong>¡SUPER QUBIT!</strong><small>La Academia de los Qubits</small></span>
+        </div>
+        <div class="top-actions">
+          <span class="live-chip"><span class="live-dot"></span> Qiskit en vivo</span>
+          <button class="icon-btn sound-btn" type="button" aria-label="Activar o desactivar sonido" data-sound>
+            <svg class="icon-sound"><use href="#i-sound"/></svg>
+            <svg class="icon-mute"><use href="#i-mute"/></svg>
+          </button>
+        </div>
+      </header>
+
+      <main class="intro-main">
+        <div class="intro-copy">
+          <p class="eyebrow reveal delay-1">Una aventura para mentes curiosas · 8–12 años</p>
+          <h1 class="logo reveal delay-1">¡SUPER<br><span>QUBIT!</span></h1>
+          <p class="logo-sub reveal delay-2">La Academia de los Qubits</p>
+          <p class="intro-lead reveal delay-2">
+            El universo está perdiendo su energía. Solo un cadete capaz de controlar
+            qubits puede encender los portales. ¿Aceptas la misión?
+          </p>
+
+          <div class="intro-start reveal delay-3">
+            <label for="cadet-name">Tu nombre de cadete <span>(opcional)</span></label>
+            <div class="intro-input-row">
+              <input id="cadet-name" name="cadet-name" maxlength="14" autocomplete="off" placeholder="Ej. Luna" aria-label="Nombre de cadete">
+              <button type="button" class="btn btn-primary btn-start" id="btn-start">
+                <span>Iniciar aventura</span>
+                <svg class="btn-icon"><use href="#i-arrow-right"/></svg>
+              </button>
+            </div>
+            <div class="continue-row" id="continue-row" hidden>
+              <button type="button" class="btn btn-ghost btn-continue" id="btn-continue">
+                <svg class="btn-icon"><use href="#i-play"/></svg>
+                <span>Continuar la aventura</span>
+              </button>
+              <button type="button" class="link-btn" id="btn-new-game">Empezar de nuevo</button>
+            </div>
+          </div>
+
+          <div class="intro-stats reveal delay-3">
+            <div><strong>6</strong><span>mundos por restaurar</span></div>
+            <div><strong>5</strong><span>retos con circuitos reales</span></div>
+            <div><strong>1</strong><span>compañero cuántico: Qubi</span></div>
+          </div>
+          <p class="intro-footnote reveal delay-4">Cada portal se abre ejecutando un circuito real en Qiskit + Aer.</p>
+        </div>
+
+        <div class="intro-art reveal delay-2" aria-hidden="true">
+          <div class="intro-orbit orbit-a"></div>
+          <div class="intro-orbit orbit-b"></div>
+          <div class="intro-planet">
+            <div class="planet-glow"></div>
+            <div class="planet-body"></div>
+            <div class="planet-band"></div>
+            <div class="planet-ring ring-back"></div>
+            <div class="planet-ring ring-front"></div>
+            <div class="planet-moon moon-1"></div>
+            <div class="planet-moon moon-2"></div>
+          </div>
+          <div class="intro-qubi" id="intro-qubi"></div>
+          <div class="intro-speech" id="intro-speech">
+            <span class="speech-name">Qubi</span>
+            <p>¡Hola, cadete! Soy Qubi. Te acompañaré a despertar los portales. ¡Solo necesitamos valentía… y un poquito de física cuántica!</p>
+          </div>
+          <div class="float-crystal crystal-a"></div>
+          <div class="float-crystal crystal-b"></div>
+          <div class="float-crystal crystal-c"></div>
+        </div>
+      </main>
+
+      <footer class="intro-footer">
+        <span>Demo para hackathon</span>
+        <span class="dot-sep"></span>
+        <span>Qiskit + Aer · circuitos ejecutados en el servidor</span>
+        <span class="dot-sep"></span>
+        <button type="button" class="link-btn" id="btn-intro-guide">Cómo se juega</button>
+      </footer>
+    </section>
+
+    <section class="screen screen-map" id="screen-map" hidden>
+      <header class="topbar">
+        <button type="button" class="brand-btn" id="map-brand" aria-label="Volver al inicio">
+          <span class="brand-mark"><svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="17" fill="none" stroke="url(#violetCyan)" stroke-width="1.6"/><ellipse cx="20" cy="20" rx="16" ry="6" fill="none" stroke="#43E7FF" stroke-width="1.4" opacity=".7" transform="rotate(-24 20 20)"/><circle cx="20" cy="20" r="4.3" fill="url(#goldGradient)"/><circle cx="32.6" cy="12.8" r="2.3" fill="#FF6BD6"/></svg></span>
+          <span class="brand-text"><strong>¡SUPER QUBIT!</strong><small>Academia de los Qubits</small></span>
+        </button>
+        <div class="hud">
+          <div class="energy-hud">
+            <div class="energy-icon"><svg><use href="#i-bolt"/></svg></div>
+            <div class="energy-copy">
+              <div class="energy-label"><span>Energía del universo</span><strong id="energy-value">20%</strong></div>
+              <div class="meter"><span class="meter-fill" id="energy-fill" style="width:20%"></span><span class="meter-shine"></span></div>
+            </div>
+          </div>
+          <div class="rank-hud">
+            <div class="rank-badge" aria-hidden="true"><svg><use href="#i-atom"/></svg></div>
+            <div class="rank-copy">
+              <div class="rank-label"><strong id="rank-name">Cadete</strong><span id="xp-value">0 XP</span></div>
+              <div class="meter thin"><span class="meter-fill xp-fill" id="xp-fill" style="width:0%"></span></div>
+            </div>
+          </div>
+          <button type="button" class="icon-btn hud-btn" id="btn-badges" aria-label="Abrir mi diario de insignias">
+            <svg><use href="#i-medal"/></svg>
+            <span class="badge-count" id="badge-count">0</span>
+          </button>
+          <button type="button" class="icon-btn hud-btn sound-btn" aria-label="Activar o desactivar sonido" data-sound>
+            <svg class="icon-sound"><use href="#i-sound"/></svg>
+            <svg class="icon-mute"><use href="#i-mute"/></svg>
+          </button>
+          <button type="button" class="icon-btn hud-btn" id="btn-help" aria-label="Ayuda y cómo jugar">
+            <svg><use href="#i-help"/></svg>
+          </button>
+        </div>
+      </header>
+
+      <main class="map-main">
+        <div class="map-heading">
+          <div>
+            <p class="eyebrow">Mapa de la Academia</p>
+            <h2>Hola, <span id="map-name">cadete</span>. El universo te necesita.</h2>
+            <p class="map-sub">Explora la Academia en 2D con Qubi. Acércate a los portales para despertarlos: cada uno restaura energía y abre un nuevo mundo.</p>
+            <p class="sr-only" id="map-controls-help"><span class="map-help-move">Usa las teclas W, A, S, D o las flechas para mover a Qubi. Pulsa E para entrar a un portal cercano. </span>También puedes seleccionar cualquier portal con Tab y abrirlo con Enter.</p>
+          </div>
+          <div class="map-status-card">
+            <span class="status-label">Próximo portal</span>
+            <strong id="next-portal-name">Reino de los Bits</strong>
+            <span id="next-portal-goal">Enciende el primer qubit</span>
+            <button type="button" class="btn btn-primary btn-small" id="btn-next-portal">
+              <span>Entrar al portal</span><svg class="btn-icon"><use href="#i-arrow-right"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <div class="map-shell">
+          <div class="map-board" id="map-board">
+            <div class="map-aurora aurora-a"></div>
+            <div class="map-aurora aurora-b"></div>
+            <svg class="map-route" viewBox="0 0 1000 620" preserveAspectRatio="none" aria-hidden="true">
+              <defs>
+                <linearGradient id="routeGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" stop-color="#FFD166"/>
+                  <stop offset="35%" stop-color="#FF6BD6"/>
+                  <stop offset="70%" stop-color="#43E7FF"/>
+                  <stop offset="100%" stop-color="#B49CFF"/>
+                </linearGradient>
+                <filter id="routeGlow" x="-20%" y="-20%" width="140%" height="140%">
+                  <feGaussianBlur stdDeviation="5" result="blur"/>
+                  <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+                </filter>
+              </defs>
+              <path class="route-base" d="M120 428 C200 330, 240 300, 310 267 C375 236, 425 345, 480 422 C540 505, 600 305, 650 236 C705 160, 740 320, 790 403 C825 466, 865 330, 900 180" fill="none" stroke="rgba(255,255,255,.14)" stroke-width="3" stroke-dasharray="2 12" stroke-linecap="round"/>
+              <path class="route-lit" id="route-lit" d="M120 428 C200 330, 240 300, 310 267 C375 236, 425 345, 480 422 C540 505, 600 305, 650 236 C705 160, 740 320, 790 403 C825 466, 865 330, 900 180" fill="none" stroke="url(#routeGradient)" stroke-width="4.5" stroke-linecap="round" filter="url(#routeGlow)" style="clip-path: inset(0 100% 0 0);"/>
+              <g class="map-decor" aria-hidden="true">
+                <circle cx="230" cy="120" r="2" fill="#fff" opacity=".6"/>
+                <circle cx="555" cy="110" r="3" fill="#43E7FF" opacity=".8"/>
+                <circle cx="840" cy="520" r="2.4" fill="#FF6BD6" opacity=".8"/>
+                <circle cx="170" cy="520" r="1.8" fill="#fff" opacity=".5"/>
+                <path d="M410 165 l5 12 12 5-12 5-5 12-5-12-12-5 12-5z" fill="#FFD166" opacity=".55"/>
+                <path d="M735 500 l4 9 9 4-9 4-4 9-4-9-9-4 9-4z" fill="#43E7FF" opacity=".5"/>
+                <ellipse cx="940" cy="480" rx="46" ry="17" fill="none" stroke="rgba(180,156,255,.35)" stroke-width="2" transform="rotate(-18 940 480)"/>
+                <circle cx="940" cy="480" r="24" fill="rgba(124,92,255,.18)" stroke="rgba(180,156,255,.55)" stroke-width="1.4"/>
+              </g>
+            </svg>
+            <div class="map-nebula map-nebula-a"></div>
+            <div class="map-nebula map-nebula-b"></div>
+            <div class="map-nodes" id="map-nodes"></div>
+            <div class="map-sparks" id="map-sparks" aria-hidden="true"></div>
+            <div class="map-avatar" id="map-avatar" aria-hidden="true"></div>
+            <div class="map-ui-hint" aria-hidden="true">
+              <span class="hint-desktop"><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd><span class="hint-word">o flechas</span><span class="hint-sep">·</span><kbd>E</kbd><span class="hint-word">entrar</span></span>
+              <span class="hint-touch"><span class="hint-word">Mueve a Qubi con la cruceta</span></span>
+            </div>
+            <div class="map-spark-counter" id="map-spark-counter" aria-label="Chispas recogidas">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-spark"/></svg>
+              <span><strong id="map-spark-count">0</strong> / <span id="map-spark-total">9</span> chispas</span>
+            </div>
+            <div class="map-near-prompt" id="map-near-prompt" role="status" aria-live="polite" hidden>
+              <span class="map-near-icon" aria-hidden="true"><svg><use href="#i-target"/></svg></span>
+              <div class="map-near-copy">
+                <span class="map-near-kicker">Portal cercano</span>
+                <strong id="map-near-name">Reino de los Bits</strong>
+                <small id="map-near-status">Portal disponible</small>
+              </div>
+              <button type="button" class="btn btn-primary btn-small" id="map-near-enter">
+                <span class="map-enter-key" aria-hidden="true">E</span><span>Entrar</span>
+              </button>
+            </div>
+            <div class="map-dpad" id="map-dpad" aria-label="Controles para mover a Qubi">
+              <button type="button" class="dpad-btn dpad-up" data-dir="up" aria-label="Mover a Qubi hacia arriba">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 14.5l6-6 6 6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </button>
+              <button type="button" class="dpad-btn dpad-left" data-dir="left" aria-label="Mover a Qubi a la izquierda">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14.5 6l-6 6 6 6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </button>
+              <span class="dpad-core" aria-hidden="true"><svg><use href="#i-atom"/></svg></span>
+              <button type="button" class="dpad-btn dpad-right" data-dir="right" aria-label="Mover a Qubi a la derecha">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9.5 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </button>
+              <button type="button" class="dpad-btn dpad-down" data-dir="down" aria-label="Mover a Qubi hacia abajo">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9.5l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </button>
+            </div>
+            <div class="map-legend">
+              <span><i class="legend-dot done"></i> Restaurado</span>
+              <span><i class="legend-dot next"></i> Disponible</span>
+              <span><i class="legend-dot locked"></i> Sellado</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="map-bottom">
+          <div class="map-progress">
+            <span class="map-progress-label">Progreso de la academia</span>
+            <div class="world-pips" id="world-pips"></div>
+            <span class="map-progress-value" id="map-progress-value">0 / 6 mundos</span>
+          </div>
+          <button type="button" class="btn btn-ghost btn-small" id="btn-achievements">
+            <svg class="btn-icon"><use href="#i-medal"/></svg>
+            <span>Mi diario cuántico</span>
+          </button>
+        </div>
+      </main>
+    </section>
+
+    <section class="screen screen-level" id="screen-level" hidden>
+      <header class="topbar level-topbar">
+        <button type="button" class="back-btn" id="level-back">
+          <svg><use href="#i-arrow-left"/></svg><span>Mapa</span>
+        </button>
+        <div class="level-title-row">
+          <span class="eyebrow" id="level-index">Mundo 1</span>
+          <strong id="level-top-name">Reino de los Bits</strong>
+        </div>
+        <div class="level-dots" id="level-dots" aria-label="Progreso de mundos"></div>
+        <div class="top-actions">
+          <button type="button" class="icon-btn hud-btn sound-btn" aria-label="Activar o desactivar sonido" data-sound>
+            <svg class="icon-sound"><use href="#i-sound"/></svg>
+            <svg class="icon-mute"><use href="#i-mute"/></svg>
+          </button>
+          <button type="button" class="icon-btn hud-btn" id="level-help" aria-label="Ayuda y cómo jugar">
+            <svg><use href="#i-help"/></svg>
+          </button>
+        </div>
+      </header>
+
+      <main class="level-layout">
+        <section class="panel scene-panel" id="scene-panel">
+          <div class="scene-top">
+            <div class="guardian-chip">
+              <div class="guardian-avatar" id="guardian-mount"></div>
+              <div class="guardian-copy">
+                <span class="eyebrow">Guardián del mundo</span>
+                <strong id="level-guardian">Lumi</strong>
+                <small id="level-guardian-role">Guardiana de la primera luz</small>
+              </div>
+            </div>
+            <div class="best-stars" id="level-best-stars" aria-label="Estrellas conseguidas"></div>
+          </div>
+
+          <div class="scene-heading">
+            <h1 id="level-name">Reino de los Bits</h1>
+            <p id="level-tagline">Donde todo es 0 o 1</p>
+          </div>
+
+          <div class="portal-stage" id="portal-stage">
+            <div class="portal-mount" id="portal-mount"></div>
+            <div class="portal-caption" id="portal-caption">
+              <span class="portal-status-dot"></span>
+              <span id="portal-status-text">Portal en reposo</span>
+            </div>
+            <div class="portal-rune rune-a"></div>
+            <div class="portal-rune rune-b"></div>
+            <div class="portal-rune rune-c"></div>
+
+            <div class="level-room" id="level-room" role="group" aria-label="Sala 2D de Qubi" hidden>
+              <div class="room-floor" aria-hidden="true"></div>
+              <div class="room-topline">
+                <span class="room-counter" id="room-counter" aria-live="polite">Descubiertos 0/3</span>
+                <span class="room-help" id="room-help">WASD / flechas · E interactuar</span>
+              </div>
+              <button type="button" class="room-portal-hit" id="room-portal-hit" aria-label="Activar portal y ejecutar el circuito">
+                <span class="room-portal-tag"><span class="keycap">E</span> Activar portal</span>
+              </button>
+              <div class="room-pedestals" id="room-pedestals" role="group" aria-label="Pedestales de poderes cuánticos"></div>
+              <div class="room-qubi" id="room-qubi" aria-hidden="true"></div>
+              <div class="room-prompt" id="room-prompt" role="status" aria-live="polite" hidden>
+                <span id="room-prompt-text"></span>
+                <button type="button" class="room-prompt-btn" id="room-prompt-btn">Descubrir</button>
+              </div>
+              <div class="room-tip" id="room-tip" role="dialog" aria-labelledby="room-tip-name" hidden>
+                <span class="room-tip-icon" id="room-tip-icon" aria-hidden="true">X</span>
+                <div class="room-tip-copy">
+                  <strong id="room-tip-name">Cambiar estado</strong>
+                  <p id="room-tip-desc"></p>
+                  <small id="room-tip-meta"></small>
+                </div>
+                <div class="room-tip-actions">
+                  <button type="button" class="btn btn-primary btn-small" id="room-tip-use">Usar poder</button>
+                  <button type="button" class="icon-btn room-tip-close" id="room-tip-close" aria-label="Cerrar explicación">
+                    <svg><use href="#i-close"/></svg>
+                  </button>
+                </div>
+              </div>
+              <div class="room-dpad" id="room-dpad" role="group" aria-label="Cruceta para mover a Qubi">
+                <button type="button" data-room-dir="up" aria-label="Mover a Qubi hacia arriba">↑</button>
+                <button type="button" data-room-dir="left" aria-label="Mover a Qubi hacia la izquierda">←</button>
+                <span class="room-dpad-core" aria-hidden="true"></span>
+                <button type="button" data-room-dir="right" aria-label="Mover a Qubi hacia la derecha">→</button>
+                <button type="button" data-room-dir="down" aria-label="Mover a Qubi hacia abajo">↓</button>
+              </div>
+              <p class="sr-only" id="room-controls-help">Usa WASD o las flechas para mover a Qubi. Acércate a un pedestal y pulsa E para descubrir el poder. También puedes tocar un pedestal directamente. Acércate al portal y pulsa E para activarlo.</p>
+            </div>
+          </div>
+
+          <div class="qubi-row">
+            <div class="qubi-mini" id="level-qubi"></div>
+            <div class="qubi-speech small">
+              <span class="speech-name">Qubi</span>
+              <p id="qubi-line">¡Vamos, cadete! Lee la misión y arma tu hechizo.</p>
+            </div>
+          </div>
+
+          <div class="mission-card">
+            <div class="mission-top">
+              <span class="eyebrow">Tu misión</span>
+              <span class="goal-chip" id="level-goal">Solo 1 · 100%</span>
+            </div>
+            <p class="mission-text" id="level-mission">Haz que el qubit termine en 1.</p>
+            <div class="mission-footer">
+              <span class="par-chip" id="level-par">3 estrellas con 1 poder</span>
+              <button type="button" class="btn btn-ghost btn-small" id="btn-hint">Pedir pista</button>
+            </div>
+            <div class="hint-box" id="hint-box" hidden>
+              <strong>Pista de Qubi</strong>
+              <p id="hint-text"></p>
+              <span class="hint-count" id="hint-count">Pista 1 de 3</span>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel builder-panel">
+          <div class="panel-heading">
+            <div>
+              <p class="eyebrow">Constructor de hechizos</p>
+              <h2>Arma tu circuito</h2>
+            </div>
+            <div class="power-count"><strong id="gate-count">0</strong><span>poderes</span></div>
+          </div>
+
+          <div class="palette" id="palette-mount" role="group" aria-label="Poderes cuánticos disponibles"></div>
+
+          <div class="builder-guide" id="builder-guide" aria-live="polite">
+            <span class="guide-spark"><svg><use href="#i-spark"/></svg></span>
+            <p>Elige un poder y colócalo en un cable de qubit.</p>
+          </div>
+
+          <div class="circuit-frame">
+            <div class="circuit-scroll" id="circuit-mount"></div>
+          </div>
+
+          <div class="spell-line">
+            <span class="spell-label">Tu hechizo</span>
+            <div class="spell-ops" id="spell-line"><span class="spell-empty">Todavía no hay poderes.</span></div>
+          </div>
+
+          <div class="builder-actions">
+            <div class="left-actions">
+              <button type="button" class="icon-text-btn" id="btn-undo" disabled>
+                <svg><use href="#i-undo"/></svg><span>Deshacer</span>
+              </button>
+              <button type="button" class="icon-text-btn danger" id="btn-clear" disabled>
+                <svg><use href="#i-trash"/></svg><span>Limpiar</span>
+              </button>
+            </div>
+            <button type="button" class="btn btn-primary btn-run" id="btn-run">
+              <span class="run-spinner" aria-hidden="true"></span>
+              <span class="run-icon"><svg><use href="#i-bolt"/></svg></span>
+              <span id="run-label">Activar portal</span>
+            </button>
+          </div>
+          <p class="builder-footnote"><span class="qiskit-pill">QISKIT</span> Tu circuito se ejecuta de verdad en Aer y se mide 1024 veces.</p>
+        </section>
+      </main>
+    </section>
+
+    <section class="screen screen-qml" id="screen-qml" hidden>
+      <header class="topbar level-topbar">
+        <button type="button" class="back-btn" id="qml-back">
+          <svg><use href="#i-arrow-left"/></svg><span>Mapa</span>
+        </button>
+        <div class="level-title-row">
+          <span class="eyebrow">Mundo 6 · Laboratorio</span>
+          <strong>Quantum Machine Learning</strong>
+        </div>
+        <div class="level-dots" id="qml-dots" aria-label="Progreso de mundos"></div>
+        <div class="top-actions">
+          <button type="button" class="icon-btn hud-btn sound-btn" aria-label="Activar o desactivar sonido" data-sound>
+            <svg class="icon-sound"><use href="#i-sound"/></svg>
+            <svg class="icon-mute"><use href="#i-mute"/></svg>
+          </button>
+          <button type="button" class="icon-btn hud-btn" id="qml-help" aria-label="Ayuda y cómo jugar">
+            <svg><use href="#i-help"/></svg>
+          </button>
+        </div>
+      </header>
+
+      <main class="qml-layout">
+        <section class="panel qml-visual">
+          <div class="qml-visual-head">
+            <div class="guardian-chip">
+              <div class="guardian-avatar" id="qml-guardian"></div>
+              <div class="guardian-copy">
+                <span class="eyebrow">Guardián del mundo</span>
+                <strong>Nova</strong>
+                <small>Científica de aprendizaje cuántico</small>
+              </div>
+            </div>
+            <div class="lab-chip"><span></span> QML Lab · 1 qubit</div>
+          </div>
+
+          <div class="chart-wrap">
+            <svg id="qml-chart" viewBox="0 0 720 440" role="img" aria-label="Gráfico de estrellas azules y rosas con la frontera de decisión del clasificador cuántico">
+              <defs>
+                <linearGradient id="boundaryGradient" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#43E7FF" stop-opacity="0"/>
+                  <stop offset="18%" stop-color="#7CFFCB"/>
+                  <stop offset="50%" stop-color="#FFFFFF"/>
+                  <stop offset="82%" stop-color="#7CFFCB"/>
+                  <stop offset="100%" stop-color="#43E7FF" stop-opacity="0"/>
+                </linearGradient>
+                <filter id="chartGlow" x="-100%" y="-20%" width="300%" height="140%">
+                  <feGaussianBlur stdDeviation="5" result="blur"/>
+                  <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+                </filter>
+              </defs>
+              <g class="chart-grid">
+                <line x1="58" y1="382" x2="694" y2="382"/>
+                <line x1="58" y1="300" x2="694" y2="300"/>
+                <line x1="58" y1="218" x2="694" y2="218"/>
+                <line x1="58" y1="136" x2="694" y2="136"/>
+                <line x1="58" y1="54" x2="694" y2="54"/>
+                <line x1="58" y1="382" x2="58" y2="54"/>
+                <line x1="217" y1="382" x2="217" y2="54" opacity=".5"/>
+                <line x1="376" y1="382" x2="376" y2="54" opacity="1"/>
+                <line x1="535" y1="382" x2="535" y2="54" opacity=".5"/>
+                <line x1="694" y1="382" x2="694" y2="54"/>
+              </g>
+              <g class="chart-axis-labels">
+                <text x="58" y="414">-1.0</text>
+                <text x="376" y="414" text-anchor="middle">0</text>
+                <text x="694" y="414" text-anchor="end">+1.0</text>
+                <text x="376" y="438" text-anchor="middle" class="axis-title">posición x de la estrella</text>
+                <text x="30" y="222" transform="rotate(-90 30 222)" text-anchor="middle" class="axis-title">brillo (decorativo)</text>
+              </g>
+              <g id="qml-boundary-group" class="boundary-group">
+                <line id="qml-boundary" x1="694" y1="44" x2="694" y2="382" stroke="url(#boundaryGradient)" stroke-width="3"/>
+                <g id="qml-boundary-label" class="boundary-label">
+                  <rect x="-52" y="-15" width="104" height="28" rx="14"/>
+                  <text text-anchor="middle" y="4">FRONTERA</text>
+                </g>
+              </g>
+              <g id="qml-points"></g>
+            </svg>
+          </div>
+
+          <div class="chart-legend">
+            <span><svg class="legend-star azul" viewBox="0 0 24 24"><path d="M12 2l2.5 7.5L22 12l-7.5 2.5L12 22l-2.5-7.5L2 12l7.5-2.5L12 2z" fill="currentColor"/></svg> clase 0 · estrellas azules</span>
+            <span><svg class="legend-star rosa" viewBox="0 0 24 24"><path d="M12 2.4l2.9 6 6.6.9-4.8 4.6 1.2 6.6L12 17.4l-5.9 3.1 1.2-6.6-4.8-4.6 6.6-.9 2.9-6z" fill="currentColor"/></svg> clase 1 · estrellas rosas</span>
+            <span class="chart-note">El eje vertical solo separa las estrellas: el modelo aprende únicamente de x.</span>
+          </div>
+
+          <div class="qml-metrics">
+            <div class="metric-card"><span>Precisión</span><strong id="qml-accuracy">50%</strong><small id="qml-accuracy-note">aún sin entrenar</small></div>
+            <div class="metric-card"><span>Ángulo θ</span><strong id="qml-theta">0.00</strong><small>parámetro aprendido</small></div>
+            <div class="metric-card"><span>Pérdida</span><strong id="qml-loss">0.25</strong><small>error cuadrático</small></div>
+            <div class="metric-card"><span>Época</span><strong id="qml-epoch">0</strong><small id="qml-epoch-note">de 44</small></div>
+          </div>
+        </section>
+
+        <section class="qml-side">
+          <div class="panel mission-card lab-mission">
+            <div class="mission-top">
+              <span class="eyebrow">Tu misión</span>
+              <span class="goal-chip">Precisión 100%</span>
+            </div>
+            <p class="mission-text">Entrena a Qubi para separar las estrellas azules de las rosas usando un circuito cuántico.</p>
+            <p class="lab-subtext">Cada estrella tiene una posición <em>x</em>. Qubi debe aprender dónde está la frontera.</p>
+          </div>
+
+          <div class="panel model-panel">
+            <div class="panel-heading compact">
+              <div>
+                <p class="eyebrow">Modelo cuántico</p>
+                <h2>El cerebro de Qubi</h2>
+              </div>
+              <span class="qubit-chip">1 qubit</span>
+            </div>
+            <div class="circuit-formula" aria-label="Circuito: codificación Ry, parámetro Ry theta y medición">
+              <span class="formula-step">Ry(πx/2)</span>
+              <span class="formula-arrow">→</span>
+              <span class="formula-step trainable">Ry(θ)</span>
+              <span class="formula-arrow">→</span>
+              <span class="formula-step measure">Medir</span>
+            </div>
+            <div class="training-progress"><span id="qml-train-progress" style="width:0%"></span></div>
+            <p class="model-status" id="qml-status">Qubi aún no sabe distinguir los colores. ¡Entrénalo!</p>
+            <div class="model-actions">
+              <button type="button" class="btn btn-primary" id="qml-train-btn">
+                <span class="run-spinner" aria-hidden="true"></span>
+                <span class="train-icon"><svg><use href="#i-bolt"/></svg></span>
+                <span id="qml-train-label">Entrenar a Qubi</span>
+              </button>
+              <button type="button" class="btn btn-ghost btn-small" id="qml-reset-btn">Reiniciar</button>
+            </div>
+            <div class="sparkline-row">
+              <span>Pérdida por época</span>
+              <svg id="qml-sparkline" viewBox="0 0 220 54" preserveAspectRatio="none" aria-hidden="true">
+                <path class="spark-grid" d="M0 48H220" fill="none" stroke="rgba(255,255,255,.12)"/>
+                <path id="qml-spark-path" d="" fill="none" stroke="#7CFFCB" stroke-width="2.4" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <p class="lab-technique"><span class="qiskit-pill">QML</span> Descenso de gradiente + parameter-shift, evaluado con Qiskit.</p>
+          </div>
+
+          <div class="panel test-panel" id="qml-test-panel">
+            <div class="panel-heading compact">
+              <div>
+                <p class="eyebrow">Prueba el modelo</p>
+                <h2>Clasifica una estrella</h2>
+              </div>
+              <span class="test-chip" id="qml-test-chip">Sin entrenar</span>
+            </div>
+            <label class="range-label" for="qml-feature">Estrella nueva en x = <strong id="qml-feature-value">+0.40</strong></label>
+            <input type="range" id="qml-feature" min="-0.98" max="0.98" step="0.01" value="0.4" disabled>
+            <div class="prediction-row">
+              <span class="prediction-pill" id="qml-prediction">Esperando entrenamiento</span>
+              <div class="prob-meter"><span id="qml-prob-fill" style="width:0%"></span></div>
+              <span class="prob-label" id="qml-prob-label">P(rosa) = —</span>
+            </div>
+          </div>
+
+          <details class="panel qml-explain">
+            <summary>¿Cómo aprende Qubi? <span>Para exploradores</span></summary>
+            <ol>
+              <li><strong>Codifica:</strong> la posición x se convierte en una rotación Ry(πx/2).</li>
+              <li><strong>Decide:</strong> el modelo aplica Ry(θ) y mide el qubit. P(1) es la probabilidad de que la estrella sea rosa.</li>
+              <li><strong>Aprende:</strong> compara su predicción con la respuesta correcta, calcula el gradiente con parameter-shift y ajusta θ.</li>
+            </ol>
+            <p>Después del entrenamiento, la frontera se coloca en x ≈ 0. ¡Todo con Qiskit!</p>
+            <div class="formula">P(rosa) = sin²((πx/2 + θ) / 2)</div>
+          </details>
+        </section>
+      </main>
+    </section>
+
+    <section class="screen screen-sandbox" id="screen-sandbox" hidden>
+      <header class="topbar level-topbar">
+        <button type="button" class="back-btn" id="sandbox-back">
+          <svg><use href="#i-arrow-left"/></svg><span>Mapa</span>
+        </button>
+        <div class="level-title-row">
+          <span class="eyebrow">Zona libre</span>
+          <strong>Patio de Juegos Cuánticos</strong>
+        </div>
+        <div class="top-actions">
+          <button type="button" class="icon-btn hud-btn sound-btn" aria-label="Activar o desactivar sonido" data-sound>
+            <svg class="icon-sound"><use href="#i-sound"/></svg>
+            <svg class="icon-mute"><use href="#i-mute"/></svg>
+          </button>
+          <button type="button" class="icon-btn hud-btn" id="sandbox-help" aria-label="Ayuda y cómo jugar">
+            <svg><use href="#i-help"/></svg>
+          </button>
+        </div>
+      </header>
+
+      <main class="level-layout sandbox-layout">
+        <section class="panel scene-panel sandbox-scene">
+          <div class="scene-top">
+            <div class="guardian-chip">
+              <div class="guardian-avatar" id="sandbox-guardian"></div>
+              <div class="guardian-copy">
+                <span class="eyebrow">Zona de experimentos</span>
+                <strong>Qubi</strong>
+                <small>Tu compañero de laboratorio</small>
+              </div>
+            </div>
+            <div class="lab-chip"><span></span> 3 qubits</div>
+          </div>
+          <div class="scene-heading">
+            <h1>Patio de Juegos</h1>
+            <p>Aquí no hay respuestas incorrectas. Prueba, combina y descubre.</p>
+          </div>
+          <div class="sandbox-art">
+            <div class="sandbox-atom">
+              <span class="atom-orbit o1"></span>
+              <span class="atom-orbit o2"></span>
+              <span class="atom-orbit o3"></span>
+              <span class="atom-core"></span>
+              <span class="atom-particle p1"></span>
+              <span class="atom-particle p2"></span>
+            </div>
+            <div class="qubi-mini sandbox-qubi" id="sandbox-qubi"></div>
+          </div>
+          <div class="sandbox-challenges">
+            <div class="mission-top"><span class="eyebrow">Retos del patio</span><span class="challenge-count" id="challenge-count">0 / 4</span></div>
+            <ul class="challenge-list" id="challenge-list">
+              <li data-challenge="zeros"><span class="challenge-check"><svg><use href="#i-check"/></svg></span><div><strong>Cero absoluto</strong><small>Deja los tres qubits en 000.</small></div></li>
+              <li data-challenge="four-ways"><span class="challenge-check"><svg><use href="#i-check"/></svg></span><div><strong>Cuatro caminos</strong><small>Reparte la suerte entre cuatro resultados.</small></div></li>
+              <li data-challenge="bell"><span class="challenge-check"><svg><use href="#i-check"/></svg></span><div><strong>Campana lejana</strong><small>Entrelaza dos qubits: 00 y 11.</small></div></li>
+              <li data-challenge="ghz"><span class="challenge-check"><svg><use href="#i-check"/></svg></span><div><strong>Trío GHZ</strong><small>Haz cantar al unísono a 000 y 111.</small></div></li>
+            </ul>
+          </div>
+          <div class="qubi-row">
+            <div class="qubi-speech small">
+              <span class="speech-name">Qubi</span>
+              <p>Sin misión, sin prisa. ¿Qué estado cuántico quieres inventar hoy?</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel builder-panel">
+          <div class="panel-heading">
+            <div>
+              <p class="eyebrow">Laboratorio libre</p>
+              <h2>Experimenta con 3 qubits</h2>
+            </div>
+            <div class="power-count"><strong id="sandbox-gate-count">0</strong><span>poderes</span></div>
+          </div>
+          <div class="palette" id="sandbox-palette-mount" role="group" aria-label="Poderes cuánticos disponibles"></div>
+          <div class="builder-guide" id="sandbox-guide" aria-live="polite">
+            <span class="guide-spark"><svg><use href="#i-spark"/></svg></span>
+            <p>Elige un poder y colócalo en cualquier cable. Todo está permitido.</p>
+          </div>
+          <div class="circuit-frame">
+            <div class="circuit-scroll" id="sandbox-circuit-mount"></div>
+          </div>
+          <div class="spell-line">
+            <span class="spell-label">Tu hechizo</span>
+            <div class="spell-ops" id="sandbox-spell-line"><span class="spell-empty">Todavía no hay poderes.</span></div>
+          </div>
+          <div class="builder-actions">
+            <div class="left-actions">
+              <button type="button" class="icon-text-btn" id="sandbox-undo" disabled>
+                <svg><use href="#i-undo"/></svg><span>Deshacer</span>
+              </button>
+              <button type="button" class="icon-text-btn danger" id="sandbox-clear" disabled>
+                <svg><use href="#i-trash"/></svg><span>Limpiar</span>
+              </button>
+            </div>
+            <button type="button" class="btn btn-primary btn-run" id="sandbox-run">
+              <span class="run-spinner" aria-hidden="true"></span>
+              <span class="run-icon"><svg><use href="#i-play"/></svg></span>
+              <span>Simular</span>
+            </button>
+          </div>
+          <p class="builder-footnote"><span class="qiskit-pill">QISKIT</span> Modo libre: simula hasta 16 poderes y observa la magia.</p>
+        </section>
+      </main>
+    </section>
+  </div>
+
+  <script src="/static/js/svg.js"></script>
+  <script src="/static/js/audio.js"></script>
+  <script src="/static/js/qml.js"></script>
+  <script src="/static/js/core.js"></script>
+  <script src="/static/js/builder.js"></script>
+  <script src="/static/js/level.js"></script>
+  <script src="/static/js/extras.js"></script>
+  <script src="/static/js/mapworld.js"></script>
+  <script src="/static/js/levelroom.js"></script>
+  <script src="/static/js/app.js"></script>
+</body>
+</html>
